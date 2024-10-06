@@ -25,7 +25,6 @@ export default function Dashboard() {
   const month = now.getMonth();
   const year = now.getFullYear();
   const hasPeriod = userDataObj?.[year]?.[month]?.[day]?.period === true;
-  console.log(hasPeriod);
 
   // count the stats to be displayed in the statuses
   function countValues() {
@@ -209,12 +208,13 @@ export default function Dashboard() {
             </button>
           );
         })}
+        {/* period emoji button */}
         <button
           onClick={() => {
             handleSetPeriod(period);
             setPeriod(!period);
           }}
-          className={`p-4 mx-auto sm:ml-12 px-5 rounded-3xl purpleShadow duration:200 bg-blue-400 hover:bg-purple-100 text-center`}
+          className={`mx-auto sm:ml-12 w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full purpleShadow duration:200 bg-blue-400 hover:bg-purple-100 text-center`}
         >
           <p className="text-2xl sm:text-4xl md:text-5xl">❤️</p>
           <p

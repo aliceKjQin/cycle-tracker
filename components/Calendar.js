@@ -37,7 +37,6 @@ export default function Calendar(props) {
   const now = new Date();
   const currentMonth = now.getMonth(); // numerical number for the month from 0 - 11
   const monthsArr = Object.keys(months);
-  console.log(monthsArr);
   const [selectedMonth, setSelectedMonth] = useState(
     monthsArr[currentMonth]
   );
@@ -109,7 +108,7 @@ export default function Calendar(props) {
           className="ml-auto text-purple-400 text-lg sm:text-xl duration-200 hover:opacity-60"
           onClick={() => handleIncrementAndDecrementMonth(1)}
         >
-          <i class="fa-solid fa-circle-chevron-right"></i>
+          <i className="fa-solid fa-circle-chevron-right"></i>
         </button>
       </div>
       {/* display day of week row (Sun-Sat) */}
@@ -150,7 +149,6 @@ export default function Calendar(props) {
                   : "bg-white dark:bg-zinc-700"; // default bg cell for no mood
                 let hasNote = dayData.note ? true : false;
                 let hasPeriod = dayData.period ? true : false;
-                console.log("mood " + dayData.mood);
                 return (
                   <div
                     style={{ background: dayData.mood ? color : undefined, minHeight: "60px" }}
