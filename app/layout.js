@@ -1,4 +1,4 @@
-import { Fugaz_One, Open_Sans } from "next/font/google";
+import { Open_Sans, Roboto } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { AuthProvider } from "@/context/AuthContext";
@@ -8,7 +8,7 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import ThemeToggle from "@/components/ThemeToggle";
 
 const opensans = Open_Sans({ subsets: ["latin"] });
-const fugaz = Fugaz_One({ subsets: ["latin"], weight: ["400"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
 export const metadata = {
   title: "bYou",
@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
   const header = (
     <header className="p-4 sm:p-8 flex items-center justify-between gap-4">
       <Link href="/">
-        <h1 className={`text-base sm:text-lg textGradient ${fugaz.className}`}>
+        <h1 className={`text-base sm:text-lg textGradient ${roboto.className}`}>
           bYou
         </h1>
       </Link>
@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
   );
   const footer = (
     <footer className="p-4 sm:p-8 grid place-items-center">
-      <p className={`text-purple-400 ${fugaz.className}`}>Be kind to yourself 💋</p>
+      <p className={`text-purple-400 ${roboto.className}`}>Be kind to yourself 💋</p>
     </footer>
   );
 

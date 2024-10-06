@@ -1,16 +1,18 @@
 "use client";
 
-import { Fugaz_One } from "next/font/google";
+import { Roboto } from "next/font/google";
 import React, { useEffect, useState } from "react";
 import Calendar from "./Calendar";
 import { useAuth } from "@/context/AuthContext";
 import { average, doc, setDoc } from "firebase/firestore";
 import Loading from "./Loading";
 import Login from "./Login";
-const fugaz = Fugaz_One({ subsets: ["latin"], weight: ["400"] });
 import { db } from "@/firebase";
 import NoteModal from "./NoteModal";
 import Button from "./Button";
+
+const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
+
 
 export default function Dashboard() {
   const { currentUser, userDataObj, setUserDataObj, loading } = useAuth();
@@ -168,7 +170,7 @@ export default function Dashboard() {
               <p className="font-medium capitalize text-xs sm:text-sm truncate">
                 {status.replaceAll("_", " ")}
               </p>
-              <p className={`text-base sm:text-lg truncate ${fugaz.className}`}>
+              <p className={`text-base sm:text-lg truncate ${roboto.className}`}>
                 {statuses[status]}
                 {status === "num_days" && statuses[status] !== 0 ? " 🙌" : ""}
                 {status === "average_mood" && statuses[status] > 2 ? " 👍" : ""}
@@ -181,7 +183,7 @@ export default function Dashboard() {
       </div>
       <h4
         className={
-          "text-5xl sm:text-6xl md:text-7xl text-center " + fugaz.className
+          "text-5xl sm:text-6xl md:text-7xl text-center " + roboto.className
         }
       >
         How do you <span className="textGradient">feel</span> today?
@@ -201,7 +203,7 @@ export default function Dashboard() {
             >
               <p className="text-4xl sm:text-5xl md:text-6xl">{emoji}</p>
               <p
-                className={`text-stone-50 text-xs sm:text-sm md:text-base ${fugaz.className}`}
+                className={`text-stone-50 text-xs sm:text-sm md:text-base ${roboto.className}`}
               >
                 {mood}
               </p>
@@ -218,7 +220,7 @@ export default function Dashboard() {
         >
           <p className="text-2xl sm:text-4xl md:text-5xl">❤️</p>
           <p
-            className={`text-stone-50 text-xs sm:text-sm md:text-base ${fugaz.className}`}
+            className={`text-stone-50 text-xs sm:text-sm md:text-base ${roboto.className}`}
           >
             {hasPeriod ? "Remove Period" : "Add Period"}
           </p>

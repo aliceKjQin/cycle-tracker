@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { gradients, baseRating, colorCombo } from "@/utils";
-import { Fugaz_One, Montaga } from "next/font/google";
+import { Roboto } from "next/font/google";
 
-const fugaz = Fugaz_One({ subsets: ["latin"], weight: ["400"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
 const months = {
   January: "Jan",
@@ -93,11 +93,11 @@ export default function Calendar(props) {
         </button>
         {/* div containing the month, year, and "Today" button */}
         <div className="col-span-3 flex justify-center items-center">
-          <p className={`text-center textGradient whitespace-nowrap ${fugaz.className}`}>
+          <p className={`text-center textGradient whitespace-nowrap ${roboto.className}`}>
             {selectedMonth}, {selectedYear}
           </p>
           <button
-            className={`ml-4 bg-purple-400 text-white px-3  rounded-lg duration-200 hover:opacity-60 ${fugaz.className}`}
+            className={`ml-4 bg-purple-400 text-white px-3  rounded-lg duration-200 hover:opacity-60 ${roboto.className}`}
             onClick={handleToday}
           >
             Today
@@ -113,7 +113,7 @@ export default function Calendar(props) {
       </div>
       {/* display day of week row (Sun-Sat) */}
       <div className="sm:py-6 md:py-10 grid grid-cols-7">
-        {dayList.map((dayOfWeek, dayOfWeekIndex) => <span key={dayOfWeekIndex} className={`text-center textGradient ${fugaz.className}`}>{dayOfWeek}</span>)}
+        {dayList.map((dayOfWeek, dayOfWeekIndex) => <span key={dayOfWeekIndex} className={`text-center textGradient ${roboto.className}`}>{dayOfWeek}</span>)}
       </div>
       {/* calendar */}
       <div className="flex flex-col overflow-hidden gap-1 py-4 ">
