@@ -32,7 +32,7 @@ const dayList = [
 ];
 
 export default function Calendar(props) {
-  const { demo, completeData, handleSetMoodAndNote, onNoteClick } = props;
+  const { demo, completeData, onNoteClick } = props;
 
   const now = new Date();
   const currentMonth = now.getMonth(); // numerical number for the month from 0 - 11
