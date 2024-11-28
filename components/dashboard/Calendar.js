@@ -75,6 +75,10 @@ export default function Calendar({
 
   const daysToDisplay = firstDayOfMonth + daysInMonth;
   const numRows = Math.floor(daysToDisplay / 7) + (daysToDisplay % 7 ? 1 : 0);
+
+  if (!selectedDay) {
+    return null; 
+  }
   return (
     //  Backward and forward bar
     <div className="flex flex-col gap-2">

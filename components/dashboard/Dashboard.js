@@ -17,29 +17,28 @@ export default function Dashboard() {
   const [showNoteModal, setShowNoteModal] = useState(false); // state to show/hide NoteModal
   const [selectedNote, setSelectedNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false); // state to show/hide note when user clicks the note emoji in Calendar
-  const [selectedDay, setSelectedDay] = useState({}); 
-
+  const [selectedDay, setSelectedDay] = useState(null);
 
   const now = new Date();
 
-
+  // initialize selectedDay after the component mounts to avoid SSR mismatches (i.e. can't read day:undefined, during prerendering):
   useEffect(() => {
-    if (!user || !userDataObj) {
-      return;
-    }
-    setData(userDataObj);
-
-    // initialize selectedDay after the component mounts to avoid SSR mismatches (i.e. can't read day:undefined, during prerendering):
     const now = new Date();
     setSelectedDay({
       year: now.getFullYear(),
       month: now.getMonth(),
       day: now.getDate(),
     });
+  }, []);
+
+  useEffect(() => {
+    if (!user || !userDataObj) {
+      return;
+    }
+    setData(userDataObj);
   }, [user, userDataObj]);
 
   console.log("Selected Day:", selectedDay);
-
 
   // Update period and note for the current calendar day both locally and in db
   async function handleSetData(
@@ -91,8 +90,9 @@ export default function Dashboard() {
 
   // Fetch data for the selected day
   const selectedDayData =
-    userDataObj?.[selectedDay?.year]?.[selectedDay?.month]?.[selectedDay?.day] ||
-    {};
+    userDataObj?.[selectedDay?.year]?.[selectedDay?.month]?.[
+      selectedDay?.day
+    ] || {};
   const { note, period } = selectedDayData; // extract note and period value from selectedDayData
 
   const togglePeriod = () => {
@@ -121,7 +121,7 @@ export default function Dashboard() {
     setIsNoteVisible(!isNoteVisible);
   };
 
-  if (loading) {
+  if (loading || !selectedDay) {
     return <Loading />;
   }
 
