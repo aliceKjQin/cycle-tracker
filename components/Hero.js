@@ -1,6 +1,6 @@
 import { Roboto } from "next/font/google";
 import React from "react";
-import Calendar from "./Calendar";
+import Calendar from "./dashboard/Calendar";
 import CallToAction from "./CallToAction";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
@@ -15,7 +15,7 @@ export default function Hero() {
         <span className="textGradient">cycle & mood</span> !
       </h1>
       <p className="text-lg sm:text-xl md:text-2xl text-center w-full mx-auto max-w-[600px]">
-        Track your pattern and be more productive {" "}
+        Track your pattern and be more productive{" "}
         <span className="font-semibold">the self-care way</span>
       </p>
       <CallToAction />

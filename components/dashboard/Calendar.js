@@ -21,15 +21,7 @@ const months = {
   December: "Dec",
 };
 const now = new Date();
-const dayList = [
-  "Sun",
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-  "Fri",
-  "Sat",
-];
+const dayList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Calendar(props) {
   const { demo, completeData, onNoteClick } = props;
@@ -37,9 +29,7 @@ export default function Calendar(props) {
   const now = new Date();
   const currentMonth = now.getMonth(); // numerical number for the month from 0 - 11
   const monthsArr = Object.keys(months);
-  const [selectedMonth, setSelectedMonth] = useState(
-    monthsArr[currentMonth]
-  );
+  const [selectedMonth, setSelectedMonth] = useState(monthsArr[currentMonth]);
   const numericMonth = monthsArr.indexOf(selectedMonth);
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
@@ -63,9 +53,9 @@ export default function Calendar(props) {
   }
 
   const handleToday = () => {
-    setSelectedMonth(monthsArr[currentMonth])
-    setSelectedYear(now.getFullYear())
-  }
+    setSelectedMonth(monthsArr[currentMonth]);
+    setSelectedYear(now.getFullYear());
+  };
 
   const monthNow = new Date(
     selectedYear,
@@ -82,40 +72,47 @@ export default function Calendar(props) {
   const daysToDisplay = firstDayOfMonth + daysInMonth;
   const numRows = Math.floor(daysToDisplay / 7) + (daysToDisplay % 7 ? 1 : 0);
   return (
-    //  backward and forward bar
+    //  Backward and forward bar
     <div className="flex flex-col gap-2">
       <div className="grid grid-cols-5 gap-4">
         <button
-          className="mr-auto text-purple-400 text-lg sm:text-xl duration-200 hover:opacity-60"
+          className="mr-auto text-lg sm:text-xl duration-200 hover:opacity-60"
           onClick={() => handleIncrementAndDecrementMonth(-1)}
         >
           <i className="fa-solid fa-circle-chevron-left"></i>
         </button>
         {/* div containing the month, year, and "Today" button */}
         <div className="col-span-3 flex justify-center items-center">
-          <p className={`text-center textGradient whitespace-nowrap ${roboto.className}`}>
+          <p className={`text-center whitespace-nowrap ${roboto.className}`}>
             {selectedMonth}, {selectedYear}
           </p>
           <button
-            className={`ml-4 bg-purple-400 text-white px-3  rounded-lg duration-200 hover:opacity-60 ${roboto.className}`}
+            className={`ml-4 bg-stone-400 text-white px-3  rounded-lg duration-200 hover:opacity-60 ${roboto.className}`}
             onClick={handleToday}
           >
             Today
           </button>
-      </div>
-      
+        </div>
+
         <button
-          className="ml-auto text-purple-400 text-lg sm:text-xl duration-200 hover:opacity-60"
+          className="ml-auto text-lg sm:text-xl duration-200 hover:opacity-60"
           onClick={() => handleIncrementAndDecrementMonth(1)}
         >
           <i className="fa-solid fa-circle-chevron-right"></i>
         </button>
       </div>
-      {/* display day of week row (Sun-Sat) */}
+      {/* Week Head (Sun-Sat) */}
       <div className="sm:py-6 md:py-10 grid grid-cols-7">
-        {dayList.map((dayOfWeek, dayOfWeekIndex) => <span key={dayOfWeekIndex} className={`text-center textGradient ${roboto.className}`}>{dayOfWeek}</span>)}
+        {dayList.map((dayOfWeek, dayOfWeekIndex) => (
+          <span
+            key={dayOfWeekIndex}
+            className={`text-center ${roboto.className}`}
+          >
+            {dayOfWeek}
+          </span>
+        ))}
       </div>
-      {/* calendar */}
+      {/* Calendar */}
       <div className="flex flex-col overflow-hidden gap-1 py-4 ">
         {[...Array(numRows).keys()].map((row, rowIndex) => {
           return (
@@ -137,47 +134,45 @@ export default function Calendar(props) {
                 let isToday = dayIndex === now.getDate();
                 let isCurrentMonth = selectedMonth === monthsArr[currentMonth];
                 let isCurrentYear = selectedYear === now.getFullYear();
-                
+
                 if (!dayDisplay) {
-                  return <div className="bg-white dark:bg-zinc-700" key={dayOfWeekIndex}></div>;
+                  return (
+                    <div
+                      // className="bg-white dark:bg-indigo-400"
+                      key={dayOfWeekIndex}
+                    ></div>
+                  );
                 }
 
-                // Fetch mood and note data
                 let dayData = data[dayIndex] || {};
-                let color = dayData.mood
-                  ? gradients.colorCombo[dayData.mood - 1] // use mood color if available
-                  : "bg-white dark:bg-zinc-700"; // default bg cell for no mood
-                let hasNote = dayData.note ? true : false;
-                let hasPeriod = dayData.period ? true : false;
                 return (
                   <div
-                    style={{ background: dayData.mood ? color : undefined, minHeight: "60px" }}
+                    style={{ minHeight: "60px" }}
                     key={dayOfWeekIndex}
-                    className={`text-xs sm:text-sm border border-solid p-2 flex items-center gap-2 justify-between rounded-lg ${
+                    className={`text-xs sm:text-sm border border-solid p-1 sm:p-2 flex items-center gap-1 justify-between rounded-lg ${
                       isToday && isCurrentMonth && isCurrentYear
                         ? "border-yellow-400 border-dashed border-2"
-                        : "border-purple-100"
-                    } ${dayData.mood ? "text-white" : "text-purple-400 dark:text-white"} ${!dayData.mood ? color : ""}`} 
+                        : "border-stone-200"
+                    } text-stone-600 dark:text-white `}
                   >
                     <p>{dayIndex}</p>
-                    <div className="flex flex-col sm:flex-row gap-1 items-center" >
-                      {hasNote && (
+                    {/* Div for period and note emojis */}
+                    <div className="flex flex-col sm:flex-row items-center text-xl sm:text-2xl md:text-3xl sm:gap-2">
+                      {dayData.period && (
+                        <span role="img" aria-label="period">
+                          <i className="fa-solid fa-heart text-pink-400"></i>
+                        </span>
+                      )}
+                      {dayData.note && (
                         <span
                           role="img"
                           aria-label="note"
                           onClick={() => {
-                            if (!demo) {
-                              onNoteClick(dayData.note);
-                            }
+                            onNoteClick(dayData.note);
                           }}
-                          className={demo ? "" : "cursor-pointer"} // Remove cursor-pointer if in demo view
+                        
                         >
-                          📝
-                        </span>
-                      )}
-                      {hasPeriod && (
-                        <span role="img" aria-label="period">
-                          ❤️
+                          <i className="fa-solid fa-pen-to-square text-stone-400  dark:text-white cursor-pointer"></i>
                         </span>
                       )}
                     </div>

@@ -1,10 +1,9 @@
-import Dashboard from "@/components/Dashboard";
-import Main from "@/components/Main";
-
+import Dashboard from "@/components/dashboard/Dashboard";
+import Main from "@/components/sharedUI/Main";
 
 export const metadata = {
-  title: "bYou ⋅ Dashboard ",
-  description: "Track your daily mood everyday of the year!",
+  title: "Cycle Tracker ⋅ Dashboard ",
+  description: "Track your cycle",
 };
 
 export default function DashboardPage() {

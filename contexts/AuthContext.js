@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { db, auth } from "@/firebase";
 import {
@@ -6,6 +6,7 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useContext, useState, useEffect, createContext } from "react";
@@ -17,7 +18,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [userDataObj, setUserDataObj] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,17 +33,21 @@ export function AuthProvider({ children }) {
 
   function logout() {
     setUserDataObj(null);
-    setCurrentUser(null);
+    setUser(null);
     return signOut(auth);
   }
 
-  // When the component mounts: The useEffect runs, and it sets up the listener (onAuthStateChanged). This listener checks if a user is logged in or not, and based on that, it fetches user data if the user is logged in. In other words, the listener only runs when user login or logout, navigate to different pages doesn't trigger the listener to run
+  // Function to send a password reset email
+  function sendPasswordReset(email) {
+    return sendPasswordResetEmail(auth, email);
+  }
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async user => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         // Set the user to local context state
         setLoading(true);
-        setCurrentUser(user); 
+        setUser(user);
         if (!user) {
           console.log("No User Found");
           return;
@@ -69,13 +74,14 @@ export function AuthProvider({ children }) {
   }, []);
 
   const value = {
-    currentUser,
+    user,
     userDataObj,
     setUserDataObj,
     loading,
     signup,
     login,
     logout,
+    sendPasswordReset,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

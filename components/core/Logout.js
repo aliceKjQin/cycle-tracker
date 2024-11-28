@@ -1,25 +1,25 @@
 "use client";
 
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 import React from "react";
-import Button from "./Button";
+import Button from "@/components/sharedUI/Button";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 export default function Logout() {
   const { logout, currentUser } = useAuth();
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   if (!currentUser) {
     return null;
   }
 
-  if (pathname === '/') {
+  if (pathname === "/") {
     return (
-        <Link href={'/dashboard'}>
-            <Button text='Go to dashboard' />
-        </Link>
-    )
+      <Link href={"/dashboard"}>
+        <Button text="Go to dashboard" />
+      </Link>
+    );
   }
   return <Button text="Logout" clickHandler={logout} dark />;
 }

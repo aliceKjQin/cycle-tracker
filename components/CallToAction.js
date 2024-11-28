@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import React from "react";
-import Button from "./Button";
-import { useAuth } from "@/context/AuthContext";
+import Button from "./sharedUI/Button";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function CallToAction() {
   const { currentUser } = useAuth();
