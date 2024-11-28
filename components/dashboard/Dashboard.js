@@ -23,8 +23,15 @@ export default function Dashboard() {
   const month = now.getMonth();
   const year = now.getFullYear();
 
-  const currentDayData = userDataObj?.[year]?.[month]?.[day] || {};
-  const { note, period } = currentDayData; // extract note and period value from currentDayData
+  const [selectedDay, setSelectedDay] = useState({
+    year,
+    month,
+    day,
+  }); // state for selected day, initial state is year, month and day from now
+
+  // Fetch data for the selected day 
+  const selectedDayData = userDataObj?.[selectedDay.year]?.[selectedDay.month]?.[selectedDay.day] || {};
+  const { note, period } = selectedDayData;// extract note and period value from selectedDayData
 
   useEffect(() => {
     if (!user || !userDataObj) {
@@ -34,21 +41,29 @@ export default function Dashboard() {
   }, [user, userDataObj]);
 
   // Update period and note for the current calendar day both locally and in db
-  async function handleSetData(updatedValue) {
-    console.log("UpdatedValue: ", updatedValue)
+  async function handleSetData(
+    updatedValue,
+    targetYear,
+    targetMonth,
+    targetDay
+  ) {
+    console.log("UpdatedValue: ", updatedValue);
     try {
       const newData = { ...userDataObj }; // create a copy of userDataObj
 
-      // Ensure year and month are at least {} to assign updated day data with  
-      if (!newData?.[year]) {
-        newData[year] = {};
+      // Ensure year and month are at least {} to assign updated day data with
+      if (!newData?.[targetYear]) {
+        newData[targetYear] = {};
       }
-      if (!newData?.[year]?.[month]) {
-        newData[year][month] = {};
+      if (!newData?.[targetYear]?.[targetMonth]) {
+        newData[targetYear][targetMonth] = {};
       }
 
-      const existingDayData = newData[year][month][day] || {};
-      newData[year][month][day] = { ...existingDayData, ...updatedValue }; // updatedValue is an Obj, thus need to spread to merge with the existingDayData correctly at the same level, without ..., it will add an nested obj inside the day's data.
+      const existingDayData = newData[targetYear][targetMonth][targetDay] || {};
+      newData[targetYear][targetMonth][targetDay] = {
+        ...existingDayData,
+        ...updatedValue,
+      }; // updatedValue is an Obj, thus need to spread to merge with the existingDayData correctly at the same level, without ..., it will add an nested obj inside the day's data.
 
       // update the local state
       setData(newData);
@@ -59,9 +74,9 @@ export default function Dashboard() {
       await setDoc(
         docRef,
         {
-          [year]: {
-            [month]: {
-              [day]: updatedValue,
+          [targetYear]: {
+            [targetMonth]: {
+              [targetDay]: updatedValue,
             },
           },
         },
@@ -74,7 +89,9 @@ export default function Dashboard() {
   }
 
   const togglePeriod = () => {
-    handleSetData({ period: !period });
+    const { year, month, day } = selectedDay;
+    const selectedDayData = userDataObj?.[year]?.[month]?.[day] || {};
+    handleSetData({ period: !selectedDayData.period }, year, month, day);
   };
 
   const openNoteModal = () => setShowNoteModal(true);
@@ -83,11 +100,12 @@ export default function Dashboard() {
 
   // Handle save note in NoteModal
   const handleNoteSave = (noteInput) => {
-    handleSetData({ note: noteInput });
+    const { year, month, day } = selectedDay;
+    handleSetData({ note: noteInput }, year, month, day);
     closeNoteModal();
   };
 
-  // Handle when click the note icon in Calendar, selectedDatNote will be passed from Calendar to Dashboard 
+  // Handle when click the note icon in Calendar, selectedDatNote will be passed from Calendar to Dashboard
   const handleNoteClick = (selectedDayNote) => {
     setSelectedNote(selectedDayNote);
     setIsNoteVisible(true);
@@ -107,12 +125,20 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col flex-1 gap-8 sm:gap-12 md:gap-16">
-      <div className="flex items-center flex-wrap gap-4">
+      <div className="flex items-center flex-wrap gap-8">
         {/* Period Button */}
-        <ActionButton onClick={togglePeriod} icon={<i className="fa-solid fa-heart text-pink-400"></i>} label={period ? "Remove" : "Add"}/>
+        <ActionButton
+          onClick={togglePeriod}
+          icon={<i className="fa-solid fa-heart text-pink-400"></i>}
+          label={period ? "Remove" : "Add"}
+        />
 
         {/* Note Button */}
-        <ActionButton onClick={openNoteModal} icon={<i className="fa-solid fa-pen-to-square text-stone-400"></i>} label={note ? "Update Note" : "Add Note"}/>
+        <ActionButton
+          onClick={openNoteModal}
+          icon={<i className="fa-solid fa-pen-to-square text-stone-400"></i>}
+          label={note ? "Update Note" : "Add Note"}
+        />
       </div>
 
       {/* Note Modal */}
@@ -133,7 +159,12 @@ export default function Dashboard() {
         </div>
       )}
 
-      <Calendar completeData={data} onNoteClick={handleNoteClick} />
+      <Calendar
+        completeData={data}
+        onNoteClick={handleNoteClick}
+        onDayClick={setSelectedDay} // Pass selected day handler
+        selectedDay={selectedDay} // Pass selected day state
+      />
     </div>
   );
 }

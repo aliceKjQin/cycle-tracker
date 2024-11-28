@@ -23,9 +23,13 @@ const months = {
 const now = new Date();
 const dayList = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export default function Calendar(props) {
-  const { demo, completeData, onNoteClick } = props;
-
+export default function Calendar({
+  demo,
+  completeData,
+  onNoteClick,
+  onDayClick,
+  selectedDay,
+}) {
   const now = new Date();
   const currentMonth = now.getMonth(); // numerical number for the month from 0 - 11
   const monthsArr = Object.keys(months);
@@ -112,7 +116,7 @@ export default function Calendar(props) {
           </span>
         ))}
       </div>
-      {/* Calendar */}
+      {/* Calendar grid */}
       <div className="flex flex-col overflow-hidden gap-1 py-4 ">
         {[...Array(numRows).keys()].map((row, rowIndex) => {
           return (
@@ -134,6 +138,7 @@ export default function Calendar(props) {
                 let isToday = dayIndex === now.getDate();
                 let isCurrentMonth = selectedMonth === monthsArr[currentMonth];
                 let isCurrentYear = selectedYear === now.getFullYear();
+                let isSelected = dayIndex === selectedDay.day; // Check if this day is selected
 
                 if (!dayDisplay) {
                   return (
@@ -147,13 +152,20 @@ export default function Calendar(props) {
                 let dayData = data[dayIndex] || {};
                 return (
                   <div
+                    onClick={() =>
+                      onDayClick({
+                        year: selectedYear,
+                        month: numericMonth,
+                        day: dayIndex,
+                      })
+                    }
                     style={{ minHeight: "60px" }}
                     key={dayOfWeekIndex}
                     className={`text-xs sm:text-sm border border-solid p-1 sm:p-2 flex items-center gap-1 justify-between rounded-lg ${
                       isToday && isCurrentMonth && isCurrentYear
                         ? "border-yellow-400 border-dashed border-2"
                         : "border-stone-200"
-                    } text-stone-600 dark:text-white `}
+                    } text-stone-600 dark:text-white ${isSelected ? 'ring-2 ring-pink-300 border-none' : ''}`}
                   >
                     <p>{dayIndex}</p>
                     {/* Div for period and note emojis */}
@@ -167,10 +179,10 @@ export default function Calendar(props) {
                         <span
                           role="img"
                           aria-label="note"
-                          onClick={() => {
+                          onClick={(e) => {
+                            e.stopPropagation(); // Prevent click from also triggering onDayClick, safeguard for potential future changes.
                             onNoteClick(dayData.note);
                           }}
-                        
                         >
                           <i className="fa-solid fa-pen-to-square text-stone-400  dark:text-white cursor-pointer"></i>
                         </span>
