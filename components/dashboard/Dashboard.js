@@ -19,19 +19,12 @@ export default function Dashboard() {
   const [isNoteVisible, setIsNoteVisible] = useState(false); // state to show/hide note when user clicks the note emoji in Calendar
 
   const now = new Date();
-  const day = now.getDate();
-  const month = now.getMonth();
-  const year = now.getFullYear();
 
   const [selectedDay, setSelectedDay] = useState({
-    year,
-    month,
-    day,
+    year: now.getFullYear(),
+    month: now.getMonth(),
+    day: now.getDate(),
   }); // state for selected day, initial state is year, month and day from now
-
-  // Fetch data for the selected day 
-  const selectedDayData = userDataObj?.[selectedDay.year]?.[selectedDay.month]?.[selectedDay.day] || {};
-  const { note, period } = selectedDayData;// extract note and period value from selectedDayData
 
   useEffect(() => {
     if (!user || !userDataObj) {
@@ -47,7 +40,7 @@ export default function Dashboard() {
     targetMonth,
     targetDay
   ) {
-    console.log("UpdatedValue: ", updatedValue);
+    console.log("TargetDay: ", targetDay);
     try {
       const newData = { ...userDataObj }; // create a copy of userDataObj
 
@@ -59,7 +52,8 @@ export default function Dashboard() {
         newData[targetYear][targetMonth] = {};
       }
 
-      const existingDayData = newData[targetYear][targetMonth][targetDay] || {};
+      const existingDayData =
+        newData?.[targetYear]?.[targetMonth]?.[targetDay] || {};
       newData[targetYear][targetMonth][targetDay] = {
         ...existingDayData,
         ...updatedValue,
@@ -88,9 +82,15 @@ export default function Dashboard() {
     }
   }
 
+  // Fetch data for the selected day
+  const selectedDayData =
+    userDataObj?.[selectedDay?.year]?.[selectedDay?.month]?.[
+      selectedDay?.day
+    ] || {};
+  const { note, period } = selectedDayData; // extract note and period value from selectedDayData
+
   const togglePeriod = () => {
     const { year, month, day } = selectedDay;
-    const selectedDayData = userDataObj?.[year]?.[month]?.[day] || {};
     handleSetData({ period: !selectedDayData.period }, year, month, day);
   };
 
@@ -146,7 +146,7 @@ export default function Dashboard() {
         <NoteModal
           onSave={handleNoteSave}
           onClose={() => setShowNoteModal(false)}
-          initialNote={currentDayData?.note || ""}
+          initialNote={selectedDayData?.note || ""}
         />
       )}
       {/* Display note when user clicks the note emoji in calendar */}

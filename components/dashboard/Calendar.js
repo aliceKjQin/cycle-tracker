@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { gradients, baseRating, colorCombo } from "@/utils";
+import { baseRating } from "@/utils";
 import { Roboto } from "next/font/google";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });

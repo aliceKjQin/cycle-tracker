@@ -41,7 +41,7 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
       <textarea
         value={noteInputValue}
         onChange={handleNoteChange}
-        placeholder="Type any observation on your diet, exercise today ..."
+        placeholder="Type any observation on your cycle day ..."
         className="bg-indigo-50 border-2 border-pink-200 p-2 rounded-md focus:outline-none focus:ring-1 focus:ring-pink-300"
         rows={8}
         autoFocus
