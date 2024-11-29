@@ -38,8 +38,6 @@ export default function Dashboard() {
     setData(userDataObj);
   }, [user, userDataObj]);
 
-  console.log("Selected Day:", selectedDay);
-
   // Update period and note for the current calendar day both locally and in db
   async function handleSetData(
     updatedValue,
@@ -131,7 +129,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col flex-1 gap-8 sm:gap-12 md:gap-16">
-      <div className="flex items-center flex-wrap gap-8">
+      <div className="flex items-center justify-center flex-wrap gap-6">
         {/* Period Button */}
         <ActionButton
           onClick={togglePeriod}
