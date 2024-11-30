@@ -2,8 +2,8 @@
 
 import { Roboto } from "next/font/google";
 import React, { useState } from "react";
-import Button from "@/components/sharedUI/Button";
-import { validateNoteInput } from "@/utils";
+import Button from "@/components/shared/Button";
+import { validateNoteInput } from "./validateNoteInput";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 

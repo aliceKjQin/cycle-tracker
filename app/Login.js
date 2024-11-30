@@ -1,11 +1,11 @@
 "use client";
 
 import { Roboto } from "next/font/google";
-import Button from "@/components/sharedUI/Button";
+import Button from "@/components/shared/Button";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
-import { validateEmail, validatePassword } from "@/utils";
+import { validateEmail, validatePassword } from "@/app/validateEmailNpassword";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -142,7 +142,7 @@ export default function Login() {
 
       {/* Forgot Password */}
       {!isRegister && (
-        <p className="text-stone-400 dark:text-indigo-200">
+        <p className="text-stone-400">
           <button onClick={handleForgotPassword}>Forgot Password?</button>
         </p>
       )}
@@ -186,7 +186,7 @@ export default function Login() {
         />
       </div>
       {/* Switch between Login/Register */}
-      <p className="text-center text-stone-400 dark:text-indigo-200">
+      <p className="text-center text-stone-400">
         {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
         <button
           onClick={() => {

@@ -21,6 +21,8 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [userDataObj, setUserDataObj] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notes, setNotes] = useState([]);
+
 
   // Auth handlers
   function signup(email, password) {

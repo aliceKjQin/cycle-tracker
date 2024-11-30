@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { baseRating } from "@/utils";
+import { demoData } from "@/utils";
 import { Roboto } from "next/font/google";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
@@ -38,7 +38,7 @@ export default function Calendar({
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
 
   const data =
-    completeData?.[selectedYear]?.[numericMonth] || (demo ? baseRating : {});
+    completeData?.[selectedYear]?.[numericMonth] || (demo ? demoData : {});
 
   function handleIncrementAndDecrementMonth(val) {
     // val +1 -1
@@ -121,7 +121,7 @@ export default function Calendar({
         ))}
       </div>
       {/* Calendar grid */}
-      <div className="flex flex-col overflow-hidden gap-1 py-4 ">
+      <div className="flex flex-col overflow-hidden gap-1 py-4">
         {[...Array(numRows).keys()].map((row, rowIndex) => {
           return (
             <div key={rowIndex} className="grid grid-cols-7">
@@ -167,9 +167,9 @@ export default function Calendar({
                     key={dayOfWeekIndex}
                     className={`text-xs sm:text-sm border border-solid p-1 sm:p-2 flex items-center gap-1 justify-between rounded-lg ${
                       isToday && isCurrentMonth && isCurrentYear
-                        ? "border-yellow-400 border-dashed border-2"
-                        : "border-stone-200"
-                    } text-stone-600 dark:text-white ${isSelected ? 'ring-2 ring-pink-300 border-none' : ''}`}
+                        ? "border-pink-300 border-dashed border-2"
+                        : "border-stone-300"
+                    } ${isSelected ? 'border-pink-300 border-2' : ''}`}
                   >
                     <p>{dayIndex}</p>
                     {/* Div for period and note emojis */}
@@ -188,7 +188,7 @@ export default function Calendar({
                             onNoteClick(dayData.note);
                           }}
                         >
-                          <i className="fa-solid fa-pen-to-square text-stone-400  dark:text-white cursor-pointer"></i>
+                          <i className="fa-solid fa-pen-to-square text-indigo-400 cursor-pointer"></i>
                         </span>
                       )}
                     </div>

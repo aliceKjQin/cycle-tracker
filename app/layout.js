@@ -3,23 +3,23 @@ import "./globals.css";
 import Link from "next/link";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Head from "./head";
-import Logout from "@/components/core/Logout";
+import Logout from "@/app/Logout";
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import ThemeToggle from "@/components/core/ThemeToggle";
+import ThemeToggle from "@/app/ThemeToggle";
 
 const opensans = Open_Sans({ subsets: ["latin"] });
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
 export const metadata = {
-  title: "bYou",
-  description: "Track your cycle and daily mood of the year!",
+  title: "Cycle Tracker",
+  description: "Track your cycle throughout the year",
 };
 
 export default function RootLayout({ children }) {
   const header = (
     <header className="p-4 sm:p-8 flex items-center justify-between gap-4">
       <Link href="/">
-        <h1 className={`text-base sm:text-lg text-pink-400 dark:text-pink-300 ${roboto.className}`}>
+        <h1 className={`text-base sm:text-lg textGradient ${roboto.className}`}>
           Cycle Tracker
         </h1>
       </Link>
@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
   );
   const footer = (
     <footer className="p-4 sm:p-8 grid place-items-center">
-      <p className={`text-pink-400 dark:text-pink-300 ${roboto.className}`}>
+      <p className={`textGradient ${roboto.className}`}>
         Be kind to yourself{" "}
         <i className="fa-regular fa-face-kiss-wink-heart fa-lg"></i>
       </p>
@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
       <AuthProvider>
         <ThemeProvider>
           <body
-            className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col  ${opensans.className} bg-white dark:bg-indigo-400 text-stone-800 dark:text-white`}
+            className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col  ${opensans.className} bg-stone-100 dark:bg-indigo-100 text-stone-600`}
           >
             {header}
             {children}

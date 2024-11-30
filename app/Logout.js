@@ -2,24 +2,32 @@
 
 import { useAuth } from "@/contexts/AuthContext";
 import React from "react";
-import Button from "@/components/sharedUI/Button";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 export default function Logout() {
-  const { logout, currentUser } = useAuth();
+  const { logout, user } = useAuth();
   const pathname = usePathname();
 
-  if (!currentUser) {
+  if (!user) {
     return null;
   }
 
   if (pathname === "/") {
     return (
-      <Link href={"/dashboard"}>
-        <Button text="Go to dashboard" />
+      <Link href={"/dashboard"} className="font-bold textGradient">
+        Dashboard
       </Link>
     );
   }
-  return <Button text="Logout" clickHandler={logout} dark />;
+
+  return (
+    <Link
+      href={"/dashboard"}
+      className="font-bold textGradient"
+      onClick={logout}
+    >
+      Logout
+    </Link>
+  );
 }
