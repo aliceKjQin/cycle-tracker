@@ -77,7 +77,7 @@ export default function Calendar({
   const numRows = Math.floor(daysToDisplay / 7) + (daysToDisplay % 7 ? 1 : 0);
 
   if (!selectedDay) {
-    return null; 
+    return null;
   }
   return (
     //  Backward and forward bar
@@ -142,7 +142,10 @@ export default function Calendar({
                 let isToday = dayIndex === now.getDate();
                 let isCurrentMonth = selectedMonth === monthsArr[currentMonth];
                 let isCurrentYear = selectedYear === now.getFullYear();
-                let isSelected = dayIndex === selectedDay.day; // Check if this day is selected
+                let isSelected =
+                  dayIndex === selectedDay.day &&
+                  numericMonth === selectedDay.month &&
+                  selectedYear === selectedDay.year; // Check if this day is the selected day
 
                 if (!dayDisplay) {
                   return (
@@ -169,7 +172,7 @@ export default function Calendar({
                       isToday && isCurrentMonth && isCurrentYear
                         ? "border-pink-300 border-dashed border-2"
                         : "border-stone-300"
-                    } ${isSelected ? 'border-pink-300 border-2' : ''}`}
+                    } ${isSelected ? "border-pink-300 border-2" : ""}`}
                   >
                     <p>{dayIndex}</p>
                     {/* Div for period and note emojis */}
