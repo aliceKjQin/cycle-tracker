@@ -169,10 +169,12 @@ export default function Calendar({
                     style={{ minHeight: "60px" }}
                     key={dayOfWeekIndex}
                     className={`text-xs sm:text-sm border border-solid p-1 sm:p-2 flex items-center gap-1 justify-between rounded-lg ${
-                      isToday && isCurrentMonth && isCurrentYear
+                      isSelected
+                        ? "border-pink-300 border-2" // Prioritize isSelected to avoid conflict with border-stone-300
+                        : isToday && isCurrentMonth && isCurrentYear
                         ? "border-pink-300 border-dashed border-2"
                         : "border-stone-300"
-                    } ${isSelected ? "border-pink-300 border-2" : ""}`}
+                    }`}
                   >
                     <p>{dayIndex}</p>
                     {/* Div for period and note emojis */}
