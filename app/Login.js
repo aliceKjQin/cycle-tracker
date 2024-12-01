@@ -100,7 +100,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col flex-1 justify-center items-center gap-4">
+    <div className="flex flex-col justify-center items-center gap-4">
       <h2 className="mb-6 text-3xl sm:text-4xl p-2 rounded-lg">
         <div className="flex gap-2">
           <i className="fa-solid fa-heart text-pink-400"></i>
@@ -119,11 +119,11 @@ export default function Login() {
       <input
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full max-w-[400px] mx-auto px-3 py-2 sm:py-3 border border-solid focus:border-pink-400 focus:outline focus:outline-pink-200 rounded-full text-black"
+        className="w-full max-w-[400px] px-3 py-2 sm:py-3 border border-solid focus:border-pink-400 focus:outline focus:outline-pink-200 rounded-full text-black"
         placeholder="Email"
       />
       {/* Password input field */}
-      <div className="relative w-full max-w-[400px] mx-auto text-stone-400">
+      <div className="relative w-full max-w-[400px] text-stone-400">
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -149,7 +149,7 @@ export default function Login() {
 
       {/* Confirm Password input (visible only in register mode) */}
       {isRegister && (
-        <div className="relative w-full max-w-[400px] mx-auto text-stone-400">
+        <div className="relative w-full max-w-[400px] text-stone-400">
           <input
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
@@ -177,7 +177,7 @@ export default function Login() {
       )}
 
       {/* Submit button */}
-      <div className="max-w-[400px] w-full mx-auto">
+      <div className="max-w-[400px] w-full">
         <Button
           clickHandler={handleSubmit}
           text={isRegister ? "Create account" : "Sign in"}

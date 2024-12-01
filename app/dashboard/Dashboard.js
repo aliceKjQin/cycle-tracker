@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Calendar from "./Calendar";
 import { useAuth } from "@/contexts/AuthContext";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import Loading from "../../components/shared/Loading";
 import Login from "../Login";
 import { db } from "@/firebase";
@@ -13,19 +13,22 @@ import ActionButton from "./ActionButton";
 import ReviewNotes from "../../components/shared/ReviewNotes";
 import TooltipMain from "./TooltipMain";
 import TooltipForReviewNotes from "./TooltipForReviewNotes";
+import DeviationLineChart from "./DeviationLineChart";
 
 export default function Dashboard() {
-  const { user, userDataObj, setUserDataObj, loading } = useAuth();
+  const { user, userDataObj, setUserDataObj, loading: loadingAuth } = useAuth();
   const [data, setData] = useState({});
   const [showNoteModal, setShowNoteModal] = useState(false); // state to show/hide NoteModal
   const [selectedNote, setSelectedNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false); // state to show/hide note when user clicks the note emoji in Calendar
   const [selectedDay, setSelectedDay] = useState({});
   const [targetMonthNotes, setTargetMonthNotes] = useState([]);
+  const [expectedCycleStartDay, setExpectedCycleStartDay] = useState("");
+  const [err, setErr] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const now = new Date();
-
-  // initialize selectedDay after the component mounts to avoid SSR mismatches (i.e. can't read day:undefined, during prerendering):
+  // initialize selectedDay after the component mounts to avoid SSR mismatches (i.e. can't read day:undefined during prerendering):
   useEffect(() => {
     const now = new Date();
     setSelectedDay({
@@ -40,6 +43,10 @@ export default function Dashboard() {
       return;
     }
     setData(userDataObj);
+    // Only update if `expectedCycleStartDay` isn't already set locally
+    if (!expectedCycleStartDay && userDataObj.metadata?.expectedCycleStartDay) {
+      setExpectedCycleStartDay(userDataObj.metadata.expectedCycleStartDay);
+    }
   }, [user, userDataObj]);
 
   // Update targetMonthNotes whenever userDataObj or selectedDay changes
@@ -47,7 +54,7 @@ export default function Dashboard() {
     if (!selectedDay || !userDataObj) return;
 
     const { year, month } = selectedDay;
-    const monthData = userDataObj[year]?.[month] || {};
+    const monthData = userDataObj.years?.[year]?.[month] || {};
 
     const notesForMonth = Object.entries(monthData)
       .map(([day, dayData]) => ({
@@ -63,7 +70,56 @@ export default function Dashboard() {
   const { year, month } = selectedDay;
   const displayedMonth = new Date(year, month).toLocaleString("default", {
     month: "long",
-  });
+  }); // Get month in readable long format, i.e. month 0 is January
+
+  // handle input change for expectedCycleStartDay
+  const handleInputChange = (e) => {
+    const input = e.target.value;
+
+    // Allow only whole numbers and empty string; *** Ensure input type is "text" not "number", as it won't trigger regex check
+    if (!/^\d*$/.test(input)) {
+      setErr("Please enter a valid whole number.");
+      return;
+    }
+
+    // Convert input to a number for range validation, or allow empty string for deletion
+    const numberInput = input ? Number(input) : "";
+
+    // Validate range if the input is not empty
+    if (numberInput !== "" && (numberInput < 1 || numberInput > 31)) {
+      setErr("Please enter a number between 1 and 31.");
+      return;
+    }
+
+    setErr(""); // Clear error
+    setExpectedCycleStartDay(numberInput);
+  };
+
+  const saveExpectedCycleStartDay = async () => {
+    setLoading(true);
+    const userRef = doc(db, "users", user.uid);
+    try {
+      await updateDoc(userRef, {
+        "metadata.expectedCycleStartDay": expectedCycleStartDay,
+      });
+      // Update global context userDataObj
+      setUserDataObj((prevUserData) => ({
+        ...prevUserData,
+        metadata: {
+          ...prevUserData.metadata,
+          expectedCycleStartDay,
+        },
+      }));
+
+      setSuccess("Successfully saved!");
+      setTimeout(() => setSuccess(""), 2000);
+    } catch (error) {
+      console.error("Failed to save cycleStartDay: ", error);
+      setErr("Failed to save cycleStartDay, please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Update period and note for the current calendar day both locally and in db
   async function handleSetData(
@@ -76,16 +132,22 @@ export default function Dashboard() {
     try {
       const newData = { ...userDataObj }; // create a copy of userDataObj
 
-      // Ensure year and month are at least {} to assign updated day data with
-      if (!newData?.[targetYear]) {
-        newData[targetYear] = {};
-      }
-      if (!newData?.[targetYear]?.[targetMonth]) {
-        newData[targetYear][targetMonth] = {};
+      // Ensure the `years` key exists to store year-specific data
+      if (!newData.years) {
+        newData.years = {};
       }
 
-      const existingDayData = newData[targetYear][targetMonth][targetDay] || {};
-      newData[targetYear][targetMonth][targetDay] = {
+      // Ensure year and month are at least {} to assign updated day data with
+      if (!newData.years[targetYear]) {
+        newData.years[targetYear] = {};
+      }
+      if (!newData.years[targetYear][targetMonth]) {
+        newData.years[targetYear][targetMonth] = {};
+      }
+
+      const existingDayData =
+        newData.years[targetYear][targetMonth][targetDay] || {};
+      newData.years[targetYear][targetMonth][targetDay] = {
         ...existingDayData,
         ...updatedValue,
       }; // updatedValue is an Obj, thus need to spread to merge with the existingDayData correctly at the same level, without ..., it will add an nested obj inside the day's data.
@@ -100,9 +162,11 @@ export default function Dashboard() {
       await setDoc(
         docRef,
         {
-          [targetYear]: {
-            [targetMonth]: {
-              [targetDay]: updatedValue,
+          years: {
+            [targetYear]: {
+              [targetMonth]: {
+                [targetDay]: updatedValue,
+              },
             },
           },
         },
@@ -117,7 +181,7 @@ export default function Dashboard() {
 
   // Fetch data for the selected day
   const selectedDayData =
-    userDataObj?.[selectedDay?.year]?.[selectedDay?.month]?.[
+    userDataObj?.years?.[selectedDay?.year]?.[selectedDay?.month]?.[
       selectedDay?.day
     ] || {};
   const { note, period } = selectedDayData; // extract note and period value from selectedDayData
@@ -148,7 +212,7 @@ export default function Dashboard() {
     setIsNoteVisible(!isNoteVisible);
   };
 
-  if (loading || !selectedDay) {
+  if (loadingAuth || !selectedDay) {
     return <Loading />;
   }
 
@@ -195,17 +259,48 @@ export default function Dashboard() {
       )}
 
       <Calendar
-        completeData={data}
+        completeData={data?.years}
         onNoteClick={handleNoteClick}
         onDayClick={setSelectedDay} // Pass selected day handler
         selectedDay={selectedDay} // Pass selected day state
       />
 
+      {/* Review Notes for the selected month */}
       <div className="flex flex-col gap-1">
         <TooltipForReviewNotes />
-        <h3 className="font-bold text-base sm:text-lg "><i className="fa-regular fa-note-sticky mr-2"></i>{displayedMonth} Notes</h3>
+        <h3 className="font-bold text-base sm:text-lg ">
+          <i className="fa-regular fa-note-sticky mr-2"></i>
+          {displayedMonth} Notes
+        </h3>
         <ReviewNotes user={user} targetMonthNotes={targetMonthNotes} />
       </div>
+
+      {/* ExpectedCycleStartDay input field */}
+      <div className="flex flex-col items-center justify-center gap-1">
+        <h2 className="mr-4 font-semibold">Set Expected Cycle Start Day</h2>
+        <div className="relative mx-auto">
+          <input
+            type="text"
+            value={expectedCycleStartDay}
+            onChange={handleInputChange}
+            className="w-full px-3 duration-200 hover:border-indigo-400 py-2 sm:py-3 border border-solid focus:border-pink-400 focus:outline focus:outline-pink-200 rounded-full text-black"
+          />
+
+          <button
+            onClick={saveExpectedCycleStartDay}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-400 font-bold"
+          >
+            {expectedCycleStartDay ? "Update" : "Save"}
+          </button>
+        </div>
+
+        {loading && <Loading />}
+        {err && <p className="text-sm text-red-500">{err}</p>}
+        {success && <p className="text-sm text-emerald-500">{success}</p>}
+      </div>
+
+      {/* Line Chart */}
+      <DeviationLineChart />
     </div>
   );
 }

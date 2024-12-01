@@ -24,23 +24,23 @@ export const useNote = (userId) => {
         const userData = userSnap.data();
 
         // Locate the specific date's note and remove the note from the dayData
-        const updatedDayData = { ...userData[year]?.[month]?.[day] };
+        const updatedDayData = { ...userData.years?.[year]?.[month]?.[day] };
 
         delete updatedDayData.note; // Remove the note
 
         // Update userData in db
         await updateDoc(userRef, {
-          [`${year}.${month}.${day}`]: updatedDayData,
+          [`years.${year}.${month}.${day}`]: updatedDayData,
         });
 
         // Update global context `userDataObj` to remove the note
         const updatedUserData = { ...userDataObj };
         if (
-          updatedUserData[year] &&
-          updatedUserData[year]?.[month] &&
-          updatedUserData[year]?.[month]?.[day]
+          updatedUserData.years?.[year] &&
+          updatedUserData.years?.[year]?.[month] &&
+          updatedUserData.years?.[year]?.[month]?.[day]
         ) {
-          delete updatedUserData[year][month][day].note;
+          delete updatedUserData.years[year][month][day].note;
         }
         setUserDataObj(updatedUserData);
 

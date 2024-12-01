@@ -7,6 +7,7 @@ import CallToAction from "./CallToAction";
 import Button from "../components/shared/Button";
 import { demoData } from "@/utils";
 import ReviewNotes from "@/components/shared/ReviewNotes";
+import DeviationLineChart from "./dashboard/DeviationLineChart";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -85,6 +86,8 @@ export default function Hero() {
       />
 
       <ReviewNotes targetMonthNotes={demoMonthNotes} isDemo />
+
+      <DeviationLineChart isDemo />
     </div>
   );
 }
