@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [showNoteModal, setShowNoteModal] = useState(false); // state to show/hide NoteModal
   const [selectedNote, setSelectedNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false); // state to show/hide note when user clicks the note emoji in Calendar
-  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedDay, setSelectedDay] = useState({});
   const [targetMonthNotes, setTargetMonthNotes] = useState([]);
 
   const now = new Date();
@@ -59,6 +59,11 @@ export default function Dashboard() {
 
     setTargetMonthNotes(notesForMonth);
   }, [selectedDay, userDataObj]);
+
+  const { year, month } = selectedDay;
+  const displayedMonth = new Date(year, month).toLocaleString("default", {
+    month: "long",
+  });
 
   // Update period and note for the current calendar day both locally and in db
   async function handleSetData(
@@ -198,6 +203,7 @@ export default function Dashboard() {
 
       <div className="flex flex-col gap-1">
         <TooltipForReviewNotes />
+        <h3 className="font-bold text-base sm:text-lg "><i className="fa-regular fa-note-sticky mr-2"></i>{displayedMonth} Notes</h3>
         <ReviewNotes user={user} targetMonthNotes={targetMonthNotes} />
       </div>
     </div>

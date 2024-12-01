@@ -15,9 +15,9 @@ export default function ReviewNotes({
 
   return (
     <div className="w-full p-4 bg-indigo-200 rounded-lg">
-      <h2 className="font-bold text-lg">
+      {isDemo && <h2 className="font-bold text-lg">
         <i className="fa-regular fa-note-sticky mr-2"></i>Review Notes
-      </h2>
+      </h2>}
       {loading && !targetMonthNotes ? (
         <Loading />
       ) : (
