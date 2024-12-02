@@ -54,7 +54,7 @@ const DeviationLineChart = ({ isDemo = false }) => {
     labels, // Labels for X-axis
     datasets: [
       {
-        label: "Deviation from Expected Cycle Start Day",
+        label: "Deviation = Actual Cycle Start Day - Expected Cycle Start Day",
         data: dataPoints,
         borderColor: "#4f46e5", // Line color
         backgroundColor: "rgba(79, 70, 229, 0.3)", // Fill under the line
@@ -73,8 +73,12 @@ const DeviationLineChart = ({ isDemo = false }) => {
         text: "Cycle Start Day Deviations (Last 12 Months)",
       },
       legend: {
-        display: false,
+        display: true,
         position: "top",
+        labels: {
+          pointStyle: 'circle', // Specifies the style, default is 'rectangular' shape 
+          usePointStyle: true,  // Enables the use of the specified pointStyle
+        },
       },
     },
     scales: {
