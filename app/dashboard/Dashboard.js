@@ -265,8 +265,8 @@ export default function Dashboard() {
         selectedDay={selectedDay} // Pass selected day state
       />
 
-      {/* Review Notes for the selected month */}
-      <div className="flex flex-col gap-1">
+      {/* Review Notes for the selected month section*/}
+      <div className="flex flex-col gap-2">
         <TooltipForReviewNotes />
         <h3 className="font-bold text-base sm:text-lg ">
           <i className="fa-regular fa-note-sticky mr-2"></i>
@@ -275,32 +275,41 @@ export default function Dashboard() {
         <ReviewNotes user={user} targetMonthNotes={targetMonthNotes} />
       </div>
 
-      {/* ExpectedCycleStartDay input field */}
-      <div className="flex flex-col items-center justify-center gap-1">
-        <h2 className="mr-4 font-semibold">Set Expected Cycle Start Day</h2>
-        <div className="relative mx-auto">
-          <input
-            type="text"
-            value={expectedCycleStartDay}
-            onChange={handleInputChange}
-            className="w-full px-3 duration-200 hover:border-indigo-400 py-2 sm:py-3 border border-solid focus:border-pink-400 focus:outline focus:outline-pink-200 rounded-full text-black"
-          />
+      {/* Cycle Pattern Section */}
+      <div className="flex flex-col gap-2">
+        <h className="font-bold text-base sm:text-lg ">
+          <i className="fa-solid fa-chart-line mr-2"></i>Cycle Pattern
+        </h>
 
-          <button
-            onClick={saveExpectedCycleStartDay}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-400 font-bold"
-          >
-            {expectedCycleStartDay ? "Update" : "Save"}
-          </button>
+        <div className="w-full p-4 bg-indigo-200 rounded-lg flex flex-col gap-6">
+          {/* ExpectedCycleStartDay input field */}
+          <div className="flex flex-col gap-2 p-2 bg-indigo-400 rounded-lg w-[240px] items-center">
+            <h2 className="font-semibold text-white">Set Expected Cycle Start Day</h2>
+            <div className="relative w-[160px]">
+              <input
+                type="text"
+                value={expectedCycleStartDay}
+                onChange={handleInputChange}
+                className="w-full px-3 duration-200 hover:border-indigo-400 py-1 sm:py-2 border border-solid focus:border-pink-400 focus:outline focus:outline-pink-200 rounded-full text-black"
+              />
+
+              <button
+                onClick={saveExpectedCycleStartDay}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-400 font-bold"
+              >
+                {expectedCycleStartDay ? "Update" : "Save"}
+              </button>
+            </div>
+
+            {loading && <Loading />}
+            {err && <p className="text-sm text-red-500">{err}</p>}
+            {success && <p className="text-sm text-emerald-500">{success}</p>}
+          </div>
+
+          {/* Line Chart */}
+          <DeviationLineChart />
         </div>
-
-        {loading && <Loading />}
-        {err && <p className="text-sm text-red-500">{err}</p>}
-        {success && <p className="text-sm text-emerald-500">{success}</p>}
       </div>
-
-      {/* Line Chart */}
-      <DeviationLineChart />
     </div>
   );
 }

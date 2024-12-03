@@ -110,7 +110,7 @@ export default function Calendar({
         </button>
       </div>
       {/* Week Head (Sun-Sat) */}
-      <div className="sm:py-6 md:py-10 grid grid-cols-7">
+      <div className="sm:py-4 grid grid-cols-7">
         {dayList.map((dayOfWeek, dayOfWeekIndex) => (
           <span
             key={dayOfWeekIndex}
@@ -121,7 +121,7 @@ export default function Calendar({
         ))}
       </div>
       {/* Calendar grid */}
-      <div className="flex flex-col overflow-hidden gap-1 py-4">
+      <div className="flex flex-col overflow-hidden gap-1 ">
         {[...Array(numRows).keys()].map((row, rowIndex) => {
           return (
             <div key={rowIndex} className="grid grid-cols-7">

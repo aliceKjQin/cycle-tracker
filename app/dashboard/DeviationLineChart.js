@@ -54,7 +54,7 @@ const DeviationLineChart = ({ isDemo = false }) => {
     labels, // Labels for X-axis
     datasets: [
       {
-        label: "Deviation = Actual Cycle Start Day - Expected Cycle Start Day",
+        label: "Deviation = Actual Start Day - Expected Start Day",
         data: dataPoints,
         borderColor: "#4f46e5", // Line color
         backgroundColor: "rgba(79, 70, 229, 0.3)", // Fill under the line
