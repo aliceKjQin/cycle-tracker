@@ -11,7 +11,7 @@ export default function TooltipForReviewNotes() {
   return (
     <>
       {/* info icon with tooltip */}
-      <div className="relative flex flex-col items-center sm:text-xl mt-6" onClick={handleTooltipToggle} > 
+      <div aria-label='tooltip-for-review-notes' className="relative flex flex-col items-center sm:text-xl mt-6" onClick={handleTooltipToggle} > 
           <i
             className="fa-solid fa-circle-info cursor-pointer textGradient"
             onMouseEnter={() => setShowTooltip(true)}

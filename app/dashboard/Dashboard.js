@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Calendar from "./Calendar";
 import { useAuth } from "@/contexts/AuthContext";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 import Loading from "../../components/shared/Loading";
 import Login from "../Login";
 import { db } from "@/firebase";
@@ -15,9 +15,36 @@ import TooltipMain from "./TooltipMain";
 import TooltipForReviewNotes from "./TooltipForReviewNotes";
 import DeviationLineChart from "./DeviationLineChart";
 
+// Utility function to update local data
+export function updateDayData(
+  userDataObj,
+  updatedValue,
+  targetYear,
+  targetMonth,
+  targetDay
+) {
+  const newData = { ...userDataObj };
+
+  if (!newData.years) newData.years = {};
+  if (!newData.years[targetYear]) newData.years[targetYear] = {};
+  if (!newData.years[targetYear][targetMonth])
+    newData.years[targetYear][targetMonth] = {};
+
+  const existingDayData =
+    newData.years[targetYear][targetMonth][targetDay] || {};
+  newData.years[targetYear][targetMonth][targetDay] = {
+    ...existingDayData,
+    ...updatedValue,
+  };
+
+  return newData;
+}
+
 export default function Dashboard() {
   const { user, userDataObj, setUserDataObj, loading: loadingAuth } = useAuth();
   const [data, setData] = useState({});
+  // Initialize the custom hook with userDataObj
+  // const { data, setData } = useDashboardData(userDataObj);
   const [showNoteModal, setShowNoteModal] = useState(false); // state to show/hide NoteModal
   const [selectedNote, setSelectedNote] = useState(null);
   const [isNoteVisible, setIsNoteVisible] = useState(false); // state to show/hide note when user clicks the note emoji in Calendar
@@ -82,7 +109,7 @@ export default function Dashboard() {
       return;
     }
 
-    // Convert input to a number for range validation, or allow empty string for deletion
+    // Convert input to a number for range validation, and allow empty string for deletion
     const numberInput = input ? Number(input) : "";
 
     // Validate range if the input is not empty
@@ -128,36 +155,21 @@ export default function Dashboard() {
     targetMonth,
     targetDay
   ) {
-    console.log("TargetDay: ", targetDay);
     try {
-      const newData = { ...userDataObj }; // create a copy of userDataObj
+      // Update local data using the utility function
+      const newData = updateDayData(
+        userDataObj,
+        updatedValue,
+        targetYear,
+        targetMonth,
+        targetDay
+      );
 
-      // Ensure the `years` key exists to store year-specific data
-      if (!newData.years) {
-        newData.years = {};
-      }
-
-      // Ensure year and month are at least {} to assign updated day data with
-      if (!newData.years[targetYear]) {
-        newData.years[targetYear] = {};
-      }
-      if (!newData.years[targetYear][targetMonth]) {
-        newData.years[targetYear][targetMonth] = {};
-      }
-
-      const existingDayData =
-        newData.years[targetYear][targetMonth][targetDay] || {};
-      newData.years[targetYear][targetMonth][targetDay] = {
-        ...existingDayData,
-        ...updatedValue,
-      }; // updatedValue is an Obj, thus need to spread to merge with the existingDayData correctly at the same level, without ..., it will add an nested obj inside the day's data.
-
-      // update the local state
+      // Update local and global state
       setData(newData);
-      // update the global state
       setUserDataObj(newData);
 
-      // update firebase
+      // Update Firebase
       const docRef = doc(db, "users", user.uid);
       await setDoc(
         docRef,
@@ -172,8 +184,6 @@ export default function Dashboard() {
         },
         { merge: true }
       );
-
-      console.log(" data saved successfully!");
     } catch (err) {
       console.error(`Failed to set data: ${err.message}`);
     }
@@ -230,6 +240,7 @@ export default function Dashboard() {
           onClick={togglePeriod}
           icon={<i className="fa-solid fa-heart text-pink-400"></i>}
           label={period ? "Remove" : "Add"}
+          ariaLabel="period-button"
         />
 
         {/* Note Button */}
@@ -237,6 +248,7 @@ export default function Dashboard() {
           onClick={openNoteModal}
           icon={<i className="fa-solid fa-pen-to-square text-indigo-400"></i>}
           label={note ? "Update Note" : "Add Note"}
+          ariaLabel="note-button"
         />
       </div>
 
@@ -277,36 +289,43 @@ export default function Dashboard() {
 
       {/* Cycle Pattern Section */}
       <div className="flex flex-col gap-2">
-        <h className="font-bold text-base sm:text-lg ">
+        <h3 className="font-bold text-base sm:text-lg ">
           <i className="fa-solid fa-chart-line mr-2"></i>Cycle Pattern
-        </h>
+        </h3>
 
-        <div className="w-full p-4 bg-indigo-200 rounded-lg flex flex-col gap-6">
+        <div className="w-full p-4 bg-indigo-200 rounded-lg flex flex-col gap-6 items-center">
           {/* ExpectedCycleStartDay input field */}
-          <div className="flex flex-col gap-2 p-2 bg-indigo-400 rounded-lg w-[240px] items-center">
-            <h2 className="font-semibold text-white">Set Expected Cycle Start Day</h2>
+          <div className="flex flex-col gap-2 p-2 bg-indigo-400 rounded-lg w-[280px] items-center">
+            <h4 className="font-semibold text-white">
+              Set Expected Cycle Start Day
+            </h4>
             <div className="relative w-[160px]">
               <input
                 type="text"
                 value={expectedCycleStartDay}
                 onChange={handleInputChange}
                 className="w-full px-3 duration-200 hover:border-indigo-400 py-1 sm:py-2 border border-solid focus:border-pink-400 focus:outline focus:outline-pink-200 rounded-full text-black"
+                aria-label="expected cycle start day"
               />
 
               <button
                 onClick={saveExpectedCycleStartDay}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-indigo-400 font-bold"
+                aria-label="save cycle start day button"
               >
                 {expectedCycleStartDay ? "Update" : "Save"}
               </button>
             </div>
-
+            
+            <div>
             {loading && <Loading />}
-            {err && <p className="text-sm text-red-500">{err}</p>}
-            {success && <p className="text-sm text-emerald-500">{success}</p>}
+            {err && <p className="text-sm text-red-200">{err}</p>}
+            {success && <p className="text-sm text-emerald-200">{success}</p>}
+            </div>
+            
           </div>
 
-          {/* Line Chart */}
+          {/* Deviation line chart for cycle start day */}
           <DeviationLineChart />
         </div>
       </div>

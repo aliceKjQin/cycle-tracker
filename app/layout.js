@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
       <AuthProvider>
         <ThemeProvider>
           <body
-            className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col  ${opensans.className} bg-stone-100 dark:bg-indigo-100 text-stone-600`}
+            className={`w-full max-w-[1000px] mx-auto text-sm sm:text-base min-h-screen flex flex-col  ${opensans.className} bg-stone-100 dark:bg-indigo-100 text-stone-700`}
           >
             {header}
             {children}

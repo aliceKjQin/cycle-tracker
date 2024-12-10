@@ -36,7 +36,6 @@ export default function Login() {
     setErrorMessage(""); // Clear previous error message if any
     try {
       if (isRegister) {
-        console.log("Signing up a new user");
         // Validate password in create account view
         const { valid: passwordValid, message: passwordMessage } =
           validatePassword(password);
@@ -51,7 +50,6 @@ export default function Login() {
         await signup(email, password);
         router.push("/dashboard");
       } else {
-        console.log("Logging in existing user");
         // Basic validation for Sign In to ensure no empty password
         if (!password) {
           setErrorMessage("Please enter your password.");
@@ -121,6 +119,7 @@ export default function Login() {
         onChange={(e) => setEmail(e.target.value)}
         className="w-full max-w-[400px] px-3 py-2 sm:py-3 border border-solid focus:border-pink-400 focus:outline focus:outline-pink-200 rounded-full text-black"
         placeholder="Email"
+        aria-label="Email"
       />
       {/* Password input field */}
       <div className="relative w-full max-w-[400px] text-stone-400">
@@ -130,11 +129,13 @@ export default function Login() {
           className="w-full px-3 py-2 sm:py-3 border border-solid  focus:border-pink-400 focus:outline focus:outline-pink-200 rounded-full text-black"
           placeholder="Password"
           type={showPassword ? "text" : "password"}
+          aria-label="Password"
         />
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
           className="absolute right-3 top-1/2 transform -translate-y-1/2"
+          aria-label={showPassword ? "Hide Password" : "Show Password"}
         >
           {showPassword ? "Hide" : "Show"}
         </button>

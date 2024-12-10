@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { demoData } from "@/utils";
 import { Roboto } from "next/font/google";
 
@@ -42,7 +42,7 @@ export default function Calendar({
 
   function handleIncrementAndDecrementMonth(val) {
     // val +1 -1
-    // if we hit the bounds of the months, then we can just adjust the year that is displayed instead
+    // if hit the bounds of the months, then adjust the year that is displayed instead
     if (numericMonth + val < 0) {
       // set month value = 11 which is Dec and decrement the year
       setSelectedMonth(monthsArr[monthsArr.length - 1]);
@@ -121,7 +121,10 @@ export default function Calendar({
         ))}
       </div>
       {/* Calendar grid */}
-      <div className="flex flex-col overflow-hidden gap-1 ">
+      <div
+        className="flex flex-col overflow-hidden gap-1"
+        aria-label="calendar-grid"
+      >
         {[...Array(numRows).keys()].map((row, rowIndex) => {
           return (
             <div key={rowIndex} className="grid grid-cols-7">
@@ -180,21 +183,20 @@ export default function Calendar({
                     {/* Div for period and note emojis */}
                     <div className="flex flex-col sm:flex-row items-center text-xl sm:text-2xl md:text-3xl sm:gap-2">
                       {dayData.period && (
-                        <span role="img" aria-label="period">
-                          <i className="fa-solid fa-heart text-pink-400"></i>
-                        </span>
+                        <i
+                          className="fa-solid fa-heart text-pink-400"
+                          aria-label="period-icon"
+                        ></i>
                       )}
                       {dayData.note && (
-                        <span
-                          role="img"
-                          aria-label="note"
-                          onClick={(e) => {
-                            e.stopPropagation(); // Prevent click from also triggering onDayClick, safeguard for potential future changes.
-                            onNoteClick(dayData.note);
-                          }}
-                        >
-                          <i className="fa-solid fa-pen-to-square text-indigo-400 cursor-pointer"></i>
-                        </span>
+                          <i
+                            className="fa-solid fa-pen-to-square text-indigo-400 cursor-pointer"
+                            aria-label="note-icon"
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent click from also triggering onDayClick, safeguard for potential future changes.
+                              onNoteClick(dayData.note);
+                            }}
+                          ></i>
                       )}
                     </div>
                   </div>

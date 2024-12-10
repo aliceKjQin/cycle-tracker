@@ -76,8 +76,8 @@ const DeviationLineChart = ({ isDemo = false }) => {
         display: true,
         position: "top",
         labels: {
-          pointStyle: 'circle', // Specifies the style, default is 'rectangular' shape 
-          usePointStyle: true,  // Enables the use of the specified pointStyle
+          pointStyle: "circle", // Specifies the style, default is 'rectangular' shape
+          usePointStyle: true, // Enables the use of the specified pointStyle
         },
       },
     },
@@ -104,14 +104,9 @@ const DeviationLineChart = ({ isDemo = false }) => {
     },
     responsive: true, // Ensure responsiveness
     maintainAspectRatio: true, // Maintain dynamic aspect ratio
-
   };
 
-  return (
-    <>
-      <Line data={chartData} options={options} />
-    </>
-  );
+  return <Line data={chartData} options={options} />;
 };
 
 export default DeviationLineChart;

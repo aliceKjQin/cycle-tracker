@@ -33,7 +33,7 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
   };
 
   return (
-    <div className="relative flex flex-col bg-indigo-100 text-stone-700 p-4 gap-4 rounded-lg">
+    <div className="relative flex flex-col bg-indigo-100 dark:bg-stone-100 text-stone-700 p-4 gap-4 rounded-lg" aria-label="note-modal">
       <h2 className={`${roboto.className}`}>
         ✏️ {initialNote ? "Update" : "Add"} Note{" "}
       </h2>
@@ -45,6 +45,7 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
         className="bg-indigo-50 border-2 border-pink-200 p-2 rounded-md focus:outline-none focus:ring-1 focus:ring-pink-300"
         rows={8}
         autoFocus
+        aria-label="note-input"
       />
       <div className="flex gap-4 mx-auto max-w-[400px]">
         <Button
@@ -52,6 +53,7 @@ export default function NoteModal({ onSave, onClose, initialNote }) {
           text={initialNote ? "Update" : "Save"}
           full
           dark
+          aria-label={initialNote ? "Update Note" : "Save Note"}
         />
         <Button clickHandler={onClose} text="Cancel" full dark />
       </div>

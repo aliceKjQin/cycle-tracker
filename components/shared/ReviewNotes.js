@@ -10,7 +10,7 @@ export default function ReviewNotes({
 
 
   return (
-    <div className="w-full p-4 bg-indigo-200 rounded-lg">
+    <div className="w-full p-4 bg-indigo-200 rounded-lg" aria-label="review-notes">
       {isDemo && <h2 className="font-bold text-lg mb-4">
         <i className="fa-regular fa-note-sticky mr-2"></i>Review Notes
       </h2>}
@@ -34,7 +34,7 @@ export default function ReviewNotes({
               targetMonthNotes.map((note, index) => (
                 <div
                   key={index}
-                  className="p-3 ring-2 ring-indigo-300 bg-pink-50 text-stone-700 shadow-sm rounded-lg flex flex-col"
+                  className="p-3 ring-2 ring-indigo-300 bg-pink-50 text-stone-700 shadow-sm rounded-lg flex flex-col" aria-label="individual note box"
                 >
                   <div className="flex justify-between items-center">
                     <p className="text-sm font-semibold">{note.displayedDate}</p>
