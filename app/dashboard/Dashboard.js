@@ -14,6 +14,7 @@ import ReviewNotes from "../../components/shared/ReviewNotes";
 import TooltipMain from "./TooltipMain";
 import TooltipForReviewNotes from "./TooltipForReviewNotes";
 import DeviationLineChart from "./DeviationLineChart";
+import TooltipDeviationChart from "./TooltipDeviationChart";
 
 // Utility function to update local data
 export function updateDayData(
@@ -324,6 +325,8 @@ export default function Dashboard() {
             </div>
             
           </div>
+
+          <TooltipDeviationChart />
 
           {/* Deviation line chart for cycle start day */}
           <DeviationLineChart />
