@@ -11,7 +11,6 @@ import {
   Legend,
 } from "chart.js";
 import useChartData from "./useChartData";
-import Loading from "@/components/shared/Loading";
 
 // Register necessary components
 Chart.register(
@@ -54,7 +53,7 @@ const DeviationLineChart = ({ isDemo = false }) => {
     labels, // Labels for X-axis
     datasets: [
       {
-        label: "Deviation = Actual Start Day - Expected Start Day",
+        label: "Deviation",
         data: dataPoints,
         borderColor: "#4f46e5", // Line color
         backgroundColor: "rgba(79, 70, 229, 0.3)", // Fill under the line

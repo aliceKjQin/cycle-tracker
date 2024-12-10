@@ -8,6 +8,7 @@ import Button from "../components/shared/Button";
 import { demoData } from "@/utils";
 import ReviewNotes from "@/components/shared/ReviewNotes";
 import DeviationLineChart from "./dashboard/DeviationLineChart";
+import TooltipDeviationChart from "./dashboard/TooltipDeviationChart";
 
 const roboto = Roboto({ subsets: ["latin"], weight: ["700"] });
 
@@ -87,6 +88,7 @@ export default function Hero() {
 
       <ReviewNotes targetMonthNotes={demoMonthNotes} isDemo />
 
+      <TooltipDeviationChart />
       <DeviationLineChart isDemo />
     </div>
   );
