@@ -124,6 +124,7 @@ export default function Dashboard() {
   };
 
   const saveExpectedCycleStartDay = async () => {
+    setErr("") // clear previous error
     setLoading(true);
     const userRef = doc(db, "users", user.uid);
     try {
@@ -143,7 +144,7 @@ export default function Dashboard() {
       setTimeout(() => setSuccess(""), 2000);
     } catch (error) {
       console.error("Failed to save cycleStartDay: ", error);
-      setErr("Failed to save cycleStartDay, please try again.");
+      setErr("Failed to save, make sure to log cycle in the calendar first.");
     } finally {
       setLoading(false);
     }
